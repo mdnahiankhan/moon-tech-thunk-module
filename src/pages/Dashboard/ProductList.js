@@ -1,15 +1,12 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import deleteProduct from "../../redux/thunk/products/deleteProduct";
-import loadProductData from "../../redux/thunk/products/fetchProducts";
+import React, { useEffect, useState } from "react";
 
 const ProductList = () => {
-  const products = useSelector((state) => state.product.products);
-  const dispatch = useDispatch();
-
+  const [products,SetProducts]=useState([])
   useEffect(() => {
-    dispatch(loadProductData());
-  });
+    fetch('http://localhost:5000/products')
+    .then((res)=>res.json())
+    .then((data)=>SetProducts(data.data))
+  }, []);
 
   return (
     <div class='flex flex-col justify-center items-center h-full w-full '>
@@ -42,7 +39,7 @@ const ProductList = () => {
             </thead>
 
             <tbody class='text-sm divide-y divide-gray-100'>
-              {products.map(({ model, brand, price, status, _id }) => (
+              {products?.map(({ model, brand, price, status, _id }) => (
                 <tr>
                   <td class='p-2'>
                     <input type='checkbox' class='w-5 h-5' value='id-1' />
@@ -69,7 +66,7 @@ const ProductList = () => {
                   </td>
                   <td class='p-2'>
                     <div class='flex justify-center'>
-                      <button onClick={() => dispatch(deleteProduct(_id))}>
+                      <button >
                         <svg
                           class='w-8 h-8 hover:text-blue-600 rounded-full hover:bg-gray-100 p-1'
                           fill='none'
