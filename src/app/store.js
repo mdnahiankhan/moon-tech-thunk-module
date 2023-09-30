@@ -1,12 +1,16 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, } from "@reduxjs/toolkit";
+import logger from "redux-logger";
 import cartSlice from "../features/cart/filter/cartSlice";
 import filterSlice from "../features/cart/filter/filterSlice";
+import productsSlice from "../features/products/productsSlice";
 
 const store = configureStore({
     reducer:{
         cart : cartSlice,
-        filter: filterSlice
+        filter: filterSlice,
+        products: productsSlice,
     },
+    middleware: (getDefaultMiddleware)=>getDefaultMiddleware().concat(logger)
 })
 
 export default store;

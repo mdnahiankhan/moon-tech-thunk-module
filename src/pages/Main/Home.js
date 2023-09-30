@@ -1,22 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ProductCard from "../../components/ProductCard";
 import { toggle, toggleBrands } from "../../features/cart/filter/filterSlice";
+import { getProducts } from "../../features/products/productsSlice";
 
 const Home = () => {
   const filter = useSelector((state) => state.filter);
-const [products,SetProducts]=useState([]);
+  const {products,isloading} = useSelector((state) => state.products);
 const dispatch = useDispatch();
 const {brands,stock}=filter;
-  
     useEffect(() => {
-        fetch('http://localhost:5000/products')
-        .then((res)=>res.json())
-        .then((data)=>SetProducts(data))
+        dispatch(getProducts())
     }, []);
     const activeClass = "text-white bg-indigo-500 border-white";
 
     let content;
+    if (isloading) {
+      content= <h1>Loading.....</h1>
+    }
     
     if (products.length) {
       content = products.map((product) => (
@@ -24,7 +25,7 @@ const {brands,stock}=filter;
       ));
     }
   
-    if (products.length && (filter.stock || filter.brand)) {
+    if (products.length && (filter.stock || filter.brands.length)) {
       content = products
         .filter((product) => {
           if (stock) {
@@ -40,6 +41,8 @@ const {brands,stock}=filter;
         })
         .map((product) => <ProductCard key={product.model} product={product} />);
     }
+
+
 
   return (
     <div className='max-w-7xl gap-14 mx-auto my-10'>

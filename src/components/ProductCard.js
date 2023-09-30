@@ -59,7 +59,6 @@ const ProductCard = ({ product }) => {
             <MdDeleteForever size='25' />
           </button>
         )}
-
       </div>
     </div>
   );
