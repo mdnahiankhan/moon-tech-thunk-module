@@ -11,7 +11,7 @@ const dispatch = useDispatch();
 const {brands,stock}=filter;
     useEffect(() => {
         dispatch(getProducts())
-    }, []);
+    }, [dispatch]);
     const activeClass = "text-white bg-indigo-500 border-white";
 
     let content;
