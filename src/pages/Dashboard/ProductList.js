@@ -1,22 +1,12 @@
-import React, { useEffect } from "react";
-import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
-import { getProducts, removeProducts, toggleDeleteSuccess } from "../../features/products/productsSlice";
+import React from "react";
+import { useGetProductsQuery, useRemoveProductsMutation } from "../../features/api/apiSlice";
 
 const ProductList = () => {
-  const {products,isloading,deleteSuccess} = useSelector((state) => state.products);
-  const dispatch= useDispatch()
-  useEffect(() => {
-    dispatch(getProducts())
-}, [dispatch]);
-useEffect(()=>{
-  if (!isloading&&deleteSuccess) {
-    toast.success("Product deleted successfully,",{id: "addproduct"})
-    dispatch(toggleDeleteSuccess())
-  }
-},[isloading,deleteSuccess,dispatch])
-if (isloading) {
-  return <p>Loading ....</p>
+  const {data,isLoading}=useGetProductsQuery();
+  const [removeProduct]=useRemoveProductsMutation()
+  const products = data
+if (isLoading) {
+  return <p className="text-center text-2xl text-green-500">Loading ....</p>
 }
 
   return (
@@ -77,7 +67,7 @@ if (isloading) {
                   </td>
                   <td class='p-2'>
                     <div class='flex justify-center'>
-                      <button onClick={()=>dispatch(removeProducts(_id))} >
+                      <button onClick={()=>removeProduct(_id)}>
                         <svg
                           class='w-8 h-8 hover:text-blue-600 rounded-full hover:bg-gray-100 p-1'
                           fill='none'

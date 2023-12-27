@@ -1,24 +1,28 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ProductCard from "../../components/ProductCard";
+import { useGetProductsQuery } from "../../features/api/apiSlice";
 import { toggle, toggleBrands } from "../../features/cart/filter/filterSlice";
-import { getProducts } from "../../features/products/productsSlice";
 
 const Home = () => {
   const filter = useSelector((state) => state.filter);
-  const {products,isloading} = useSelector((state) => state.products);
 const dispatch = useDispatch();
 const {brands,stock}=filter;
-    useEffect(() => {
-        dispatch(getProducts())
-    }, [dispatch]);
+    // useEffect(() => {
+    //   fetch("http://localhost:5000/products")
+    //   .then(res=>res.json())
+    //   .then(data=>setProducts(data))
+    // }, []);
+    const {data,isLoading,isError}= useGetProductsQuery(null,{refetchOnMountOrArgChange : true})
     const activeClass = "text-white bg-indigo-500 border-white";
-
+    const products=data
     let content;
-    if (isloading) {
-      content= <h1>Loading.....</h1>
+   if (isLoading) {
+    return <p className="text-center mt-4 text-xl text-green-600">Loading ...</p>
+   }
+    if (isError) {
+      return <p className="text-center mt-4 text-3xl text-red-600">Something went wrong please try again.</p>
     }
-    
     if (products.length) {
       content = products.map((product) => (
         <ProductCard key={product.model} product={product} />
